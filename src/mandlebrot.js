@@ -1,15 +1,16 @@
 import { forEach } from 'lodash'
 
-export const IMAGE_WIDTH = 600
-export const IMAGE_HEIGHT = 600
-const MAX = 255
+const MAX = 100
 
-export function gen() {
+/**
+ * Generate an array of RGBA image data based on the mandelbrot set
+ */
+export function genImageData(width, height) {
   let imageData = []
-  for (let x = 0; x < IMAGE_WIDTH; x++) {
-    for (let y = 0; y < IMAGE_HEIGHT; y++) {
-      const real = (x - IMAGE_WIDTH / 2.0) * 4.0 / IMAGE_WIDTH
-      const imag = (y - IMAGE_HEIGHT / 2.0) * 4.0 / IMAGE_WIDTH
+  for (let x = 0; x < width; x++) {
+    for (let y = 0; y < height; y++) {
+      const real = (x - width / 2.0) * 4.0 / width
+      const imag = (y - height / 2.0) * 4.0 / height
 
       forEach(getColor(mandlebrot(imag, real, MAX)), c => {
         imageData.push(c)
@@ -36,13 +37,14 @@ function mandlebrot(startReal, startImag, max) {
     counter++
   }
 
-  if (counter >= max) {
-    return -1
-  } else {
-    return counter // returning the number of iterations allows for coloring
-  }
+  return counter >= max ? -1 : counter // returning the number of iterations allows for coloring
 }
 
+/**
+ * Returns an array of ints representing an RGBA value based on the 
+ * iterations param
+ * @param {int} iterations 
+ */
 function getColor(iterations) {
   let r, g, b
 
@@ -51,7 +53,7 @@ function getColor(iterations) {
     g = 0
     b = 0
   } else {
-    // colour gradient:      Red -> Blue -> Green -> Red -> Black
+    // colour gradient:     Blue -> Red  -> Green -> Red -> Black
     // corresponding values:  0  ->  16  ->  32   -> 64  ->  127 (or -1)
     if (iterations < 16) {
       r = 16 * iterations - 1

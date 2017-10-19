@@ -2,7 +2,7 @@ import { forEach } from 'lodash'
 
 export const IMAGE_WIDTH = 600
 export const IMAGE_HEIGHT = 600
-const MAX = 127
+const MAX = 255
 
 export function gen() {
   let imageData = []
@@ -54,15 +54,15 @@ function getColor(iterations) {
     // colour gradient:      Red -> Blue -> Green -> Red -> Black
     // corresponding values:  0  ->  16  ->  32   -> 64  ->  127 (or -1)
     if (iterations < 16) {
-      r = 16 * (16 - iterations)
+      r = 16 * iterations - 1
       g = 0
-      b = 16 * iterations - 1
+      b = 16 * (16 - iterations)
     } else if (iterations < 32) {
       r = 0
       g = 16 * (iterations - 16)
       b = 16 * (32 - iterations) - 1
     } else if (iterations < 64) {
-      r = 0 //8 * (iterations - 32)
+      r = 8 * (iterations - 32)
       g = 8 * (64 - iterations) - 1
       b = 0
     } else {
